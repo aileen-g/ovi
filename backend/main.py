@@ -170,3 +170,6 @@ def analysis():
     summary = "Here's what your last few logs suggest." if out else "Log a few days to get started."
     return {"summary": summary, "ai_summary": ai_summary(logs, ins, out), "findings": out,
             "disclaimer": "Patterns are based on your logs, not a diagnosis. Talk to a clinician about changes that concern you."}
+
+from pcos_routes import register
+register(app, db, all_logs, insights)
