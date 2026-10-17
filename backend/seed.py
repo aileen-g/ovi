@@ -23,6 +23,8 @@ db.execute(
 
 if len(sys.argv) > 1 and sys.argv[1] == "clear":
     db.execute("DELETE FROM logs")
+    db.execute("CREATE TABLE IF NOT EXISTS profile(id INTEGER PRIMARY KEY, data TEXT)")
+    db.execute("DELETE FROM profile")
     db.commit()
     print("All data deleted.")
     sys.exit()
@@ -114,5 +116,11 @@ db.executemany(
     "INSERT INTO logs VALUES (?,?,?,?,?)",
     [(d, *vals) for d, vals in logs.items()],
 )
+# A demo health profile (for the PCOS pattern check on the Analysis tab)
+db.execute("CREATE TABLE IF NOT EXISTS profile(id INTEGER PRIMARY KEY, data TEXT)")
+demo_profile = dict(age=24, height_cm=162, weight_kg=76, weight_gain=True, hair_growth=True,
+                    skin_darkening=False, hair_loss=True, pimples=True, fast_food=True,
+                    regular_exercise=False)
+db.execute("INSERT OR REPLACE INTO profile VALUES (1, ?)", (json.dumps(demo_profile),))
 db.commit()
-print(f"Done! Added {len(logs)} days of demo data ({len(starts)} periods).")
+print(f"Done! Added {len(logs)} days of demo data ({len(starts)} periods) and a demo health profile.")
