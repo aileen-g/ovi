@@ -16,8 +16,8 @@ export const api = {
   logs: (): Promise<Record<string, Log>> => fetch(`${BASE}/logs`).then(j),
   save: (day: string, log: Log) =>
     fetch(`${BASE}/logs/${day}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(log) }),
+  history: () => fetch(`${BASE}/history`).then(j),
   insights: () => fetch(`${BASE}/insights`).then(j),
-  analysis: () => fetch(`${BASE}/analysis`).then(j),
   phases: (): Promise<PhaseData> => fetch(`${BASE}/phases`).then(j),
 };
 

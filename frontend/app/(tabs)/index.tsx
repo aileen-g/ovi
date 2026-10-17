@@ -54,7 +54,7 @@ export default function Home() {
 
   useFocusEffect(useCallback(() => {
     api.logs().then(setLogs).catch(() => {});
-    api.insights().then((i) => setPredicted(i.predicted_days)).catch(() => {});
+    api.history().then((i) => setPredicted(i.predicted_days)).catch(() => {});
     api.phases().then(setPhaseData).catch(() => {});
   }, []));
 
@@ -155,7 +155,7 @@ export default function Home() {
           </View>
           <View style={{ flex: 1, marginLeft: 16 }}>
             <Text style={{ fontSize: 18, fontWeight: "700", color: C.brown }}>How are you feeling today?</Text>
-            <Text style={{ fontSize: 14, color: C.grey, marginTop: 2 }}>A little check-in, just for you.</Text>
+            <Text style={{ fontSize: 14, color: C.grey, marginTop: 2 }}>You're in your {phases[iso(new Date())] ? `${PHASES[phaseToday].label.toLowerCase()} phase.` : "Log a period to see your phase"}</Text>
           </View>
           <Text style={{ fontSize: 22, color: C.grey }}>›</Text>
         </Pressable>

@@ -47,8 +47,8 @@ def periods(logs: dict) -> list[list[str]]:
 
 def avg(xs): return round(statistics.mean(xs), 1) if xs else None
 
-@app.get("/insights")
-def insights():
+@app.get("/history")
+def history():
     runs = periods(all_logs())
     starts = [date.fromisoformat(r[0]) for r in runs]
     cycles = [(b - a).days for a, b in zip(starts, starts[1:])]
@@ -57,8 +57,11 @@ def insights():
     if cycles and starts:
         nxt = starts[-1] + timedelta(days=round(statistics.mean(cycles)))
         predicted = [str(nxt + timedelta(days=i)) for i in range(round(statistics.mean(lengths)))]
+    # Month label for each bar (e.g. "Sep"), named after the month that period/cycle started
+    months = [s.strftime("%b") for s in starts]
     return {"avg_cycle": avg(cycles), "avg_period": avg(lengths),
-            "cycle_lengths": cycles, "period_lengths": lengths, "predicted_days": predicted}
+            "cycle_lengths": cycles, "period_lengths": lengths, "predicted_days": predicted,
+            "cycle_months": months[:len(cycles)], "period_months": months}
 
 # ---------------------------------------------------------------------------
 # PHASES
@@ -112,7 +115,7 @@ def phase_days(logs: dict, avg_cycle, avg_period) -> dict:
  
 @app.get("/phases")
 def phases():
-    logs, ins = all_logs(), insights()
+    logs, ins = all_logs(), history()
     cycle_len = round(ins["avg_cycle"]) if ins["avg_cycle"] else DEFAULT_CYCLE
     period_len = round(ins["avg_period"]) if ins["avg_period"] else DEFAULT_PERIOD
     return {
@@ -124,10 +127,10 @@ def phases():
         "estimated": ins["avg_cycle"] is None or ins["avg_period"] is None,
     }
 
-@app.get("/analysis")
-def analysis():
+@app.get("/insights")
+def insights():
     """Rule-based pattern spotting. Every finding is a gentle 'worth asking about', never a diagnosis."""
-    logs, ins = all_logs(), insights()
+    logs, ins = all_logs(), history()
     runs, cycles = periods(logs), ins["cycle_lengths"]
     period_days = [d for r in runs for d in r]
     n_pd = len(period_days) or 1
@@ -172,4 +175,4 @@ def analysis():
             "disclaimer": "Patterns are based on your logs, not a diagnosis. Talk to a clinician about changes that concern you."}
 
 from pcos_routes import register
-register(app, db, all_logs, insights)
+register(app, db, all_logs, history)
