@@ -60,6 +60,70 @@ def insights():
     return {"avg_cycle": avg(cycles), "avg_period": avg(lengths),
             "cycle_lengths": cycles, "period_lengths": lengths, "predicted_days": predicted}
 
+# ---------------------------------------------------------------------------
+# PHASES
+# Day 1 = first day of a period. Everything is worked out from user's average
+# cycle length and average period length, so it updates by itself as user logs.
+#   Menstrual : Day 1 -> last day of bleeding
+#   Ovulation : 3 days before the estimated ovulation day -> 1 day after it
+#   Follicular: Day 1 -> ovulation day (so it overlaps period)
+#   Luteal    : day after ovulation -> last day before the next period
+# The phases overlap, so each calendar day gets ONE label. If a day is in
+# several phases, the first one in PRIORITY wins.
+# ---------------------------------------------------------------------------
+PRIORITY = ["menstrual", "ovulation", "follicular", "luteal"]
+DEFAULT_CYCLE, DEFAULT_PERIOD = 28, 5     # used until you've logged enough to average
+LUTEAL_LENGTH = 14                         # ovulation is usually ~14 days before the next period
+FUTURE_CYCLES = 3                          # how many cycles ahead to predict
+ 
+def phase_days(logs: dict, avg_cycle, avg_period) -> dict:
+    """Return {"YYYY-MM-DD": phase name} for every day we can label."""
+    runs = periods(logs)
+    if not runs:
+        return {}
+    cycle_len = round(avg_cycle) if avg_cycle else DEFAULT_CYCLE
+    period_len = round(avg_period) if avg_period else DEFAULT_PERIOD
+    ovulation_day = max(cycle_len - LUTEAL_LENGTH, 1)   # as a day number, Day 1 = period start
+ 
+    # Logged periods use the real last bleeding day. Predicted ones use the average period length.
+    cycles = [(date.fromisoformat(r[0]), date.fromisoformat(r[-1])) for r in runs]
+    for _ in range(FUTURE_CYCLES):
+        nxt = cycles[-1][0] + timedelta(days=cycle_len)
+        cycles.append((nxt, nxt + timedelta(days=period_len - 1)))
+    starts = [c[0] for c in cycles] + [cycles[-1][0] + timedelta(days=cycle_len)]  # last one = end marker
+ 
+    out: dict[str, str] = {}
+    for i, (start, period_end) in enumerate(cycles):
+        cycle_end = starts[i + 1] - timedelta(days=1)       # the day before the next period
+        ov = start + timedelta(days=ovulation_day - 1)
+        ranges = {
+            "luteal":     (ov + timedelta(days=1), cycle_end),
+            "follicular": (start, ov),
+            "ovulation":  (ov - timedelta(days=3), ov + timedelta(days=1)),
+            "menstrual":  (start, period_end),
+        }
+        # Paint lowest priority first so higher priority paints over it.
+        for name in reversed(PRIORITY):
+            a, b = ranges[name]
+            a, b = max(a, start), min(b, cycle_end)
+            for n in range((b - a).days + 1):
+                out[str(a + timedelta(days=n))] = name
+    return out
+ 
+@app.get("/phases")
+def phases():
+    logs, ins = all_logs(), insights()
+    cycle_len = round(ins["avg_cycle"]) if ins["avg_cycle"] else DEFAULT_CYCLE
+    period_len = round(ins["avg_period"]) if ins["avg_period"] else DEFAULT_PERIOD
+    return {
+        "days": phase_days(logs, ins["avg_cycle"], ins["avg_period"]),
+        "cycle_length": cycle_len,
+        "period_length": period_len,
+        "ovulation_day": max(cycle_len - LUTEAL_LENGTH, 1),
+        # True until there are 2+ logged periods, so the app can say "based on a typical cycle"
+        "estimated": ins["avg_cycle"] is None or ins["avg_period"] is None,
+    }
+
 @app.get("/analysis")
 def analysis():
     """Rule-based pattern spotting. Every finding is a gentle 'worth asking about', never a diagnosis."""
