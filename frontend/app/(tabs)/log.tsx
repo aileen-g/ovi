@@ -1,16 +1,37 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable, ScrollView, Alert } from "react-native";
+import { View, Text, TextInput, Pressable, ScrollView, Alert, Image } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { api, iso, C } from "../../lib/api";
 
 const FLOW = ["none", "light", "medium", "heavy"];
-const MOODS = ["low", "sensitive", "calm", "happy", "anxious"];
+// Same mood names as before (so saved data and insights don't change), now each with its egg picture.
+// Images live in frontend/assets/images/
+const MOODS: { value: string; img: any }[] = [
+  { value: "low",       img: require("../../assets/images/eggs/egg_low.png") },
+  { value: "sensitive", img: require("../../assets/images/eggs/egg_sensitive.png") },
+  { value: "calm",      img: require("../../assets/images/eggs/egg_calm.png") },
+  { value: "happy",     img: require("../../assets/images/eggs/egg_happy.png") },
+  { value: "anxious",   img: require("../../assets/images/eggs/egg_anxious.png") },
+];
 const SYMPTOMS = ["Mild cramps", "Tender breasts", "Headache", "Bloating"];
 
 function Chip({ label, on, onPress }: { label: string; on: boolean; onPress: () => void }) {
   return (
     <Pressable onPress={onPress} style={{ padding: 10, borderRadius: 10, margin: 4, backgroundColor: on ? C.yellow : C.card }}>
       <Text style={{ color: C.brown, textTransform: "capitalize" }}>{label}</Text>
+    </Pressable>
+  );
+}
+
+// One egg tile. The eggs are white, so the tile is pale pink (#FFEAEA) instead of white. Selected = dark outline.
+function MoodTile({ label, img, on, onPress }: { label: string; img: any; on: boolean; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} accessibilityLabel={label}
+      style={{ flex: 1, marginHorizontal: 3, paddingVertical: 8, paddingHorizontal: 4, borderRadius: 14, alignItems: "center",
+        backgroundColor: "#FFEAEA", borderWidth: 2, borderColor: on ? C.brown : "transparent" }}>
+      <Image source={img} resizeMode="contain" style={{ width: "100%", height: 48 }} />
+      <Text numberOfLines={1} adjustsFontSizeToFit
+        style={{ color: C.brown, fontSize: 11, marginTop: 4, textTransform: "capitalize", fontWeight: on ? "700" : "400" }}>{label}</Text>
     </Pressable>
   );
 }
@@ -40,7 +61,9 @@ export default function DailyLog() {
       <Text style={label}>PERIOD FLOW</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>{FLOW.map((f) => <Chip key={f} label={f} on={flow === f} onPress={() => setFlow(f)} />)}</View>
       <Text style={label}>MOOD</Text>
-      <View style={{ flexDirection: "row", flexWrap: "wrap" }}>{MOODS.map((x) => <Chip key={x} label={x} on={mood === x} onPress={() => setMood(x)} />)}</View>
+      <View style={{ flexDirection: "row", marginHorizontal: -3 }}>
+        {MOODS.map((x) => <MoodTile key={x.value} label={x.value} img={x.img} on={mood === x.value} onPress={() => setMood(x.value)} />)}
+      </View>
       <Text style={label}>SYMPTOMS</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>{SYMPTOMS.map((s) => <Chip key={s} label={s} on={symptoms.includes(s)} onPress={() => toggle(s)} />)}</View>
       <Text style={label}>NOTES</Text>
