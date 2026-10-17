@@ -26,49 +26,53 @@ export default function Home() {
   const phases = phaseData?.days ?? {};
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 20, paddingTop: 60 }}>
-      <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown }}>Welcome</Text>
-      <View style={{ backgroundColor: C.card, borderRadius: 16, padding: 16, marginTop: 16 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={{ fontSize: 22, fontWeight: "600", color: C.brown }}>{month.toLocaleString("en", { month: "long", year: "numeric" })}</Text>
-          <Text style={{ fontSize: 22 }} onPress={() => setMonth(new Date(y, m - 1, 1))}>‹   <Text onPress={() => setMonth(new Date(y, m + 1, 1))}>›</Text></Text>
-        </View>
-        <Pressable onPress={() => setShowPhases((v) => !v)}
-          style={{ alignSelf: "flex-start", marginTop: 10, paddingVertical: 6, paddingHorizontal: 14, borderRadius: 16, borderWidth: 1, borderColor: C.brown,
-            backgroundColor: showPhases ? C.brown : "transparent" }}>
-          <Text style={{ color: showPhases ? "#FFFFFF" : C.brown, fontWeight: "600" }}>{showPhases ? "Hide Phases" : "Show Phases"}</Text>
-        </Pressable>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 12 }}>
-          {"SMTWTFS".split("").map((d, i) => <Text key={i} style={{ width: "14.28%", textAlign: "center", color: C.grey }}>{d}</Text>)}
-          {[...blanks, ...days].map((d, i) => {
-            if (!d) return <View key={i} style={{ width: "14.28%", height: 44 }} />;
-            const key = iso(d);
-            // Phases off: logged period days are pink circles (as before). Phases on: the highlight replaces them.
-            const isPeriod = !showPhases && logs[key] && logs[key].flow !== "none";
-            const isToday = key === iso(new Date());
-            const phase = showPhases ? phases[key] : undefined;
-            const date = d.getDate();
-            const col = i % 7; // 0 = Sunday column, 6 = Saturday column
-            // Join the highlight to its neighbour when the next/previous day (same week row) is in the same phase,
-            // so a phase looks like one continuous band with rounded ends.
-            const joinL = !!phase && col > 0 && date > 1 && phases[iso(new Date(y, m, date - 1))] === phase;
-            const joinR = !!phase && col < 6 && date < daysInMonth && phases[iso(new Date(y, m, date + 1))] === phase;
-            return (
-              <Pressable key={i} style={{ width: "14.28%", height: 44, alignItems: "center", justifyContent: "center" }}
-                onPress={() => router.push({ pathname: "/log", params: { date: key } })}>
-                {phase && (
-                  <View style={{ position: "absolute", top: 4, bottom: 4, left: 0, right: 0, backgroundColor: PHASES[phase].color,
-                    borderTopLeftRadius: joinL ? 0 : 18, borderBottomLeftRadius: joinL ? 0 : 18,
-                    borderTopRightRadius: joinR ? 0 : 18, borderBottomRightRadius: joinR ? 0 : 18 }} />
-                )}
-                <View style={{ width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center",
-                  backgroundColor: isPeriod ? C.pink : isToday ? C.yellow : "transparent",
-                  borderWidth: predicted.includes(key) ? 1 : 0, borderStyle: "dashed", borderColor: "#C76B7A" }}>
-                  <Text style={{ color: C.brown }}>{d.getDate()}</Text>
-                </View>
+  <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 20, paddingTop: 60 }}>
+        <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown }}>Welcome</Text>
+        <View style={{ backgroundColor: C.card, borderRadius: 16, padding: 16, marginTop: 16 }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", flexShrink: 1, flexWrap: "wrap" }}>
+              <Text style={{ fontSize: 22, fontWeight: "600", color: C.brown }}>{month.toLocaleString("en", { month: "long", year: "numeric" })}</Text>
+              <Pressable onPress={() => setShowPhases((v) => !v)}
+                style={{ marginLeft: 10, paddingVertical: 4, paddingHorizontal: 10, borderRadius: 14, borderWidth: 1, borderColor: C.brown,
+                  backgroundColor: showPhases ? C.brown : "transparent" }}>
+                <Text style={{ color: showPhases ? "#FFFFFF" : C.brown, fontWeight: "600", fontSize: 12 }}>{showPhases ? "Hide Phases" : "Show Phases"}</Text>
               </Pressable>
-            );
-          })}
+            </View>
+            <Text style={{ fontSize: 22 }} onPress={() => setMonth(new Date(y, m - 1, 1))}>‹   <Text onPress={() => setMonth(new Date(y, m + 1, 1))}>›</Text></Text>
+          </View>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 12 }}>
+            {"SMTWTFS".split("").map((d, i) => <Text key={i} style={{ width: "14.28%", textAlign: "center", color: C.grey }}>{d}</Text>)}
+            {[...blanks, ...days].map((d, i) => {
+              if (!d) return <View key={i} style={{ width: "14.28%", height: 44 }} />;
+              const key = iso(d);
+              // Phases off: logged period days are pink circles (as before). Phases on: the highlight replaces them.
+              const isPeriod = !showPhases && logs[key] && logs[key].flow !== "none";
+              const isToday = key === iso(new Date());
+              const phase = showPhases ? phases[key] : undefined;
+              const date = d.getDate();
+              const col = i % 7; // 0 = Sunday column, 6 = Saturday column
+              // Join the highlight to its neighbour when the next/previous day (same week row) is in the same phase,
+              // so a phase looks like one continuous band with rounded ends.
+              const joinL = !!phase && col > 0 && date > 1 && phases[iso(new Date(y, m, date - 1))] === phase;
+              const joinR = !!phase && col < 6 && date < daysInMonth && phases[iso(new Date(y, m, date + 1))] === phase;
+              return (
+                <Pressable key={i} style={{ width: "14.28%", height: 44, alignItems: "center", justifyContent: "center" }}
+                  onPress={() => router.push({ pathname: "/log", params: { date: key } })}>
+                  {phase && (
+                    <View style={{ position: "absolute", top: 4, bottom: 4, left: 0, right: 0, backgroundColor: PHASES[phase].color,
+                      borderTopLeftRadius: joinL ? 0 : 18, borderBottomLeftRadius: joinL ? 0 : 18,
+                      borderTopRightRadius: joinR ? 0 : 18, borderBottomRightRadius: joinR ? 0 : 18 }} />
+                  )}
+                  <View style={{ width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center",
+                    backgroundColor: isPeriod ? C.pink : isToday ? C.yellow : "transparent",
+                    borderWidth: isToday ? 2 : predicted.includes(key) ? 1 : 0,
+                    borderStyle: isToday ? "solid" : "dashed",
+                    borderColor: isToday ? "#C9A227" : "#C76B7A" }}>
+                    <Text style={{ color: C.brown }}>{d.getDate()}</Text>
+                  </View>
+                </Pressable>
+              );
+            })}
         </View>
         {showPhases && (
           <View style={{ marginTop: 12 }}>
