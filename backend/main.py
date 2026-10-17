@@ -142,8 +142,8 @@ def analysis():
         spread = max(cycles) - min(cycles)
         if spread > 7 or max(cycles) > 35 or min(cycles) < 21:
             add("Irregular cycle length",
-                f"Your cycles ranged from {min(cycles)} to {max(cycles)} days. Irregular cycles can have many causes "
-                "(stress, thyroid, PCOS and others). Worth mentioning to a clinician.", "watch")
+                f"Your cycles ranged from {min(cycles)} to {max(cycles)} days. Irregular cycles can have many causes"
+                ", and this can be worth mentioning to a clinician.", "watch")
         if max(cycles) > 60:
             add("Long gaps between periods", "Very long gaps are worth checking with a clinician, especially if new for you or in your 40s+ (perimenopause).", "watch")
     if ins["avg_period"] and ins["avg_period"] > 7:
@@ -153,13 +153,13 @@ def analysis():
     cramps = sum(sym(d, "Mild cramps") for d in period_days) / n_pd
     if heavy >= 0.4 and cramps >= 0.5 and len(period_days) >= 4:
         add("Heavy and painful periods",
-            "Frequent heavy flow with cramps is a pattern clinicians look at for fibroids, adenomyosis or endometriosis. "
-            "It's common to have this and be fine, but it's worth raising with a doctor.", "watch")
+            "Frequent heavy flow with cramps is a pattern clinicians tend to look at. "
+            "It's common to have this and be fine, but it can be worth raising with a clinician.", "watch")
     off = [d for d in logs if d not in period_days and sym(d, "Mild cramps")]
     if len(off) >= 4:
         add("Cramps outside your period", f"You logged cramps on {len(off)} non-period days. Pelvic pain outside bleeding is worth discussing with a clinician.", "watch")
     if heavy >= 0.4 and any(sym(d, "Headache") for d in logs):
-        add("Possible low iron", "Heavy bleeding plus headaches can go with low iron. A blood test (ferritin) is a simple way to check.", "info")
+        add("Possible low iron", "Heavy bleeding plus headaches can go with low iron. A blood test can be a simple way to check.", "info")
     low = [d for d in logs if logs[d]["mood"] in ("low", "anxious")]
     #if len(low) >= 5:
         #add("Mood patterns", f"Low or anxious mood on {len(low)} logged days. If it clusters before your period, PMS/PMDD may be worth discussing.", "info")

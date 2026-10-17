@@ -8,7 +8,7 @@ const YESNO: [string, string][] = [
   ["hair_growth", "Excess hair growth (face, chin, body)"],
   ["skin_darkening", "Dark skin patches (neck, underarms)"],
   ["hair_loss", "Hair thinning or loss"],
-  ["pimples", "Acne"],
+  ["acne", "Acne"],
   ["fast_food", "Eat fast food often"],
   ["regular_exercise", "Exercise regularly"],
 ];
@@ -32,7 +32,7 @@ function Toggle({ label, on, onPress }: { label: string; on: boolean; onPress: (
 const emptyForm: any = {
   age: "", height_cm: "", weight_kg: "",
   weight_gain: false, hair_growth: false, skin_darkening: false,
-  hair_loss: false, pimples: false, fast_food: false, regular_exercise: false,
+  hair_loss: false, acne: false, fast_food: false, regular_exercise: false,
 };
 
 export default function Analysis() {
@@ -139,7 +139,7 @@ export default function Analysis() {
         </View>
       )}
 
-      {/* ---- Everything below is the same as before ---- */}
+      {/* ---- Stuff from before ---- */}
       {loading && !a && (
         <View style={{ marginTop: 24, alignItems: "center" }}>
           <ActivityIndicator color={C.brown} />
