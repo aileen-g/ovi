@@ -10,7 +10,7 @@ const YESNO: [string, string][] = [
   ["hair_growth", "Excess hair growth (face, chin, body)"],
   ["skin_darkening", "Dark skin patches (neck, underarms)"],
   ["hair_loss", "Hair thinning or loss"],
-  ["acne", "Acne"],
+  ["pimples", "Acne"],
   ["fast_food", "Eat fast food often"],
   ["regular_exercise", "Exercise regularly"],
 ];
@@ -34,13 +34,14 @@ function Toggle({ label, on, onPress }: { label: string; on: boolean; onPress: (
 const emptyForm: any = {
   age: "", height_cm: "", weight_kg: "",
   weight_gain: false, hair_growth: false, skin_darkening: false,
-  hair_loss: false, acne: false, fast_food: false, regular_exercise: false,
+  hair_loss: false, pimples: false, fast_food: false, regular_exercise: false,
 };
 
 export default function Insights() {
   const [a, setA] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [pcos, setPcos] = useState<any>(null);
+  const [endo, setEndo] = useState<any>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<any>(emptyForm);
   const [error, setError] = useState("");
@@ -52,6 +53,7 @@ export default function Insights() {
     setLoading(true);
     api.insights().then(setA).catch(() => {}).finally(() => setLoading(false));
     loadPcos();
+    fetch(`${BASE}/endo`).then((r) => r.json()).then(setEndo).catch(() => {});
     fetch(`${BASE}/profile`).then((r) => r.json()).then((p) => {
       if (p && p.age) setForm({ ...p, age: String(p.age), height_cm: String(p.height_cm), weight_kg: String(p.weight_kg) });
     }).catch(() => {});
@@ -140,6 +142,39 @@ export default function Insights() {
           </Pressable>
         </View>
       )}
+
+      {/* ---- Endometriosis pattern check ---- */}
+      <View style={{ ...card, borderLeftWidth: 5, borderLeftColor: endo?.ready ? LEVEL_COLOR[endo.level] : C.pink }}>
+        <Text style={{ fontWeight: "600", color: C.brown }}>Endometriosis pattern check</Text>
+
+        {endo?.ready && (<>
+          <Text style={{ marginTop: 6, fontSize: 18, fontWeight: "700", color: C.brown }}>{LEVEL_TEXT[endo.level]}</Text>
+          <Text style={{ color: C.brown, marginTop: 2 }}>to the symptom pattern reported in women diagnosed with endometriosis</Text>
+
+          {endo.reasons_raising.length > 0 ? (<>
+            <Text style={small}>WHAT RAISED IT</Text>
+            {endo.reasons_raising.map((r: any, i: number) => (
+              <View key={i} style={{ marginTop: 6 }}>
+                <Text style={{ color: C.brown }}>•  {r.factor}</Text>
+                <Text style={{ color: C.grey, fontSize: 13, marginLeft: 14 }}>{r.evidence}</Text>
+              </View>
+            ))}
+          </>) : (
+            <Text style={{ ...small, color: C.brown }}>None of the symptom patterns we look for showed up in your logs.</Text>
+          )}
+
+          {endo.not_seen.length > 0 && (<>
+            <Text style={small}>NOT SEEN IN YOUR LOGS</Text>
+            <Text style={{ color: C.brown, marginTop: 4 }}>{endo.not_seen.join(", ")}</Text>
+          </>)}
+
+          <Text style={{ ...small, marginTop: 14 }}>{endo.data_note}</Text>
+          <Text style={{ fontSize: 11, color: C.grey, marginTop: 6 }}>{endo.note}</Text>
+        </>)}
+
+        {endo && !endo.ready && <Text style={{ color: C.brown, marginTop: 6 }}>{endo.message}</Text>}
+        {!endo && <Text style={{ color: C.grey, marginTop: 6 }}>Checking...</Text>}
+      </View>
 
       {/* ---- Stuff from before ---- */}
       {loading && !a && (

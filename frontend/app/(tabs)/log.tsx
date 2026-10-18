@@ -16,7 +16,7 @@ const MOODS: { value: string; img: any }[] = [
   { value: "happy",     img: require("../../assets/images/eggs/egg_happy.png") },
   { value: "anxious",   img: require("../../assets/images/eggs/egg_anxious.png") },
 ];
-const SYMPTOMS = ["Mild cramps", "Heavy cramps", "Headache", "Bloating"];
+const SYMPTOMS = ["Mild cramps", "Heavy cramps", "Headache", "Bloating", "Pelvic pain", "Pain during sex"];
 
 const PAGE_PAD = 20;   // page side padding (see contentContainerStyle below)
 const BOX_PAD = 8;     // padding inside each rounded box

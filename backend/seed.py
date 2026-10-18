@@ -80,21 +80,21 @@ for i, start in enumerate(starts):
 
         symptoms = []
         if in_period and n <= 3 and random.random() < 0.85:
-            symptoms.append("Mild cramps")
+            symptoms.append("Heavy cramps" if flow == "heavy" and random.random() < 0.5 else "Mild cramps")
         if in_period and random.random() < 0.3:
             symptoms.append("Headache")
         if in_period and random.random() < 0.3:
             symptoms.append("Bloating")
         # Cramps outside the period (around mid-cycle) show up in the analysis
         if not in_period and 12 <= n <= 16 and random.random() < 0.6:
-            symptoms.append("Mild cramps")
+            symptoms.append("Pelvic pain" if random.random() < 0.5 else "Mild cramps")
+        if not in_period and 8 <= n <= 20 and random.random() < 0.08:
+            symptoms.append("Pain during sex")
         if not in_period and random.random() < 0.08:
             symptoms.append("Headache")
-        # Tender breasts and bloating in the days before the next period
+        # Bloating in the days before the next period
         if not in_period and days_until_next <= 5 and random.random() < 0.6:
-            symptoms.append("Tender breasts")
-            if random.random() < 0.5:
-                symptoms.append("Bloating")
+            symptoms.append("Bloating")
 
         # Moods: low or anxious in the days before and during the period
         if days_until_next <= 4 or (in_period and n <= 1):

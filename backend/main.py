@@ -159,7 +159,7 @@ def insights():
         add("Heavy and painful periods",
             "Frequent heavy flow with cramps is a pattern clinicians tend to look at. "
             "It's common to have this and be fine, but it can be worth raising with a clinician.", "watch")
-    off = [d for d in logs if d not in period_days and sym(d, "Mild cramps")]
+    off = [d for d in logs if d not in period_days and cramp(d)]
     if len(off) >= 4:
         add("Cramps outside your period", f"You logged cramps on {len(off)} non-period days. Pelvic pain outside bleeding is worth discussing with a clinician.", "watch")
     if heavy >= 0.4 and any(sym(d, "Headache") for d in logs):
@@ -177,3 +177,6 @@ def insights():
 
 from pcos_routes import register
 register(app, db, all_logs, history)
+
+from endo_routes import register as register_endo
+register_endo(app, all_logs, periods)

@@ -34,9 +34,9 @@ export default function Info() {
 
       {CONDITIONS.map((c, i) => (
         <View key={i} style={{ backgroundColor: C.card, borderRadius: 20, paddingVertical: 20, paddingHorizontal: 20, marginBottom: 16 }}>
-          <Text style={{ fontSize: 20, fontWeight: "700", color: MUTED }}>{c.title}</Text>
+          <Text style={{ fontSize: 18, fontWeight: "700", color: MUTED }}>{c.title}</Text>
           <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
-            <Text style={{ flex: 1, fontSize: 16, lineHeight: 24, color: MUTED }}>{c.body}</Text>
+            <Text style={{ flex: 1, fontSize: 13, lineHeight: 16, color: MUTED }}>{c.body}</Text>
             <Image
               source={c.image}
               resizeMode="contain"
