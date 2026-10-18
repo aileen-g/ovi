@@ -5,7 +5,17 @@
 
 IMPORTANT: the training data came from a clinic where ~1 in 3 patients had PCOS. Real-world
 rates are much lower, so the score is NOT "your chance of having PCOS". We show a pattern-match
-level instead: "similar to patterns seen in clinic patients who had PCOS".
+level instead: "similar to patterns seen in clinic patients who had PCOS
+
+Dataset:
+author = {Prasoon Kottarathil},
+title = {Polycystic ovary syndrome (PCOS)},
+year = {2020},
+publisher = {kaggle},
+journal = {Kaggle Dataset},
+how published = {\url{https://www.kaggle.com/prasoonkottarathil/polycystic-ovary-syndrome-pcos}}
+
+".
 """
 import os
 import joblib

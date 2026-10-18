@@ -3,7 +3,11 @@
 Unlike the PCOS check (trained on a dataset), there is no open dataset that has symptoms for
 women with and without endometriosis. So the weights come from a published UK primary-care
 case-control study ("Can symptomatology help in the diagnosis of endometriosis? Findings from a
-national case-control study": 5,540 women with diagnosed endometriosis vs matched controls).
+national case-control study": 5,540 women with diagnosed endometriosis vs matched controls)
+
+https://researchportal.bath.ac.uk/en/publications/can-symptomatology-help-in-the-diagnosis-of-endometriosis-finding/
+
+.
 
 It is still a logistic model: start from the baseline risk, then each symptom pattern that shows up
 in the user's logs multiplies the odds by that symptom's odds ratio (adding ln(OR) in log-odds).
