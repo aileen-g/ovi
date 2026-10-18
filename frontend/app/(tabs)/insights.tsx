@@ -106,17 +106,19 @@ export default function Insights() {
           <Text style={{ color: C.brown, marginTop: 2 }}>to patterns seen in clinic patients who had PCOS</Text>
 
           {pcos.reasons_raising.length > 0 && (<>
-            <Text style={small}>WHAT RAISED IT</Text>
+            <Text style={small}>COMMON SYMPTOMS</Text>
             {pcos.reasons_raising.map((r: any, i: number) => (
               <Text key={i} style={{ color: C.brown, marginTop: 4 }}>•  {r.factor}</Text>
             ))}
           </>)}
+
           {pcos.reasons_lowering.length > 0 && (<>
-            <Text style={small}>WHAT LOWERED IT</Text>
+            <Text style={small}>NOT SEEN</Text>
             {pcos.reasons_lowering.map((r: any, i: number) => (
               <Text key={i} style={{ color: C.brown, marginTop: 4 }}>•  {r.factor}</Text>
             ))}
           </>)}
+        
           <Text style={{ ...small, marginTop: 14 }}>{pcos.data_note}</Text>
           <Text style={{ fontSize: 11, color: C.grey, marginTop: 6 }}>{pcos.note}</Text>
         </>)}
@@ -167,7 +169,7 @@ export default function Insights() {
           <Text style={{ color: C.brown, marginTop: 2 }}>to the symptom pattern reported in women diagnosed with endometriosis</Text>
 
           {endo.reasons_raising.length > 0 ? (<>
-            <Text style={small}>WHAT RAISED IT</Text>
+            <Text style={small}>COMMON SYMPTOMS</Text>
             {endo.reasons_raising.map((r: any, i: number) => (
               <View key={i} style={{ marginTop: 6 }}>
                 <Text style={{ color: C.brown }}>•  {r.factor}</Text>

@@ -109,10 +109,15 @@ export default function DailyLog() {
         {MOODS.map((x) => <MoodTile key={x.value} label={x.value} img={x.img} size={moodW} on={mood === x.value} onPress={() => setMood(x.value)} />)}
       </View>
 
-      <SectionLabel title="SYMPTOMS" hint="Select all that apply" />
-      <View style={{ ...box, paddingBottom: 0, backgroundColor: C.card, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
-        {SYMPTOMS.map((s) => <SymptomChip key={s} label={s} width={symW} on={symptoms.includes(s)} onPress={() => toggle(s)} />)}
-      </View>
+
+      {flow !== "none" && (
+        <>
+          <SectionLabel title="SYMPTOMS" hint="Select all that apply" />
+          <View style={{ ...box, paddingBottom: 0, backgroundColor: C.card, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+            {SYMPTOMS.map((s) => <SymptomChip key={s} label={s} width={symW} on={symptoms.includes(s)} onPress={() => toggle(s)} />)}
+          </View>
+        </>
+      )}
 
       <SectionLabel title="NOTES" hint="Optional" />
       <TextInput multiline value={notes} onChangeText={setNotes} placeholder="Anything else?"

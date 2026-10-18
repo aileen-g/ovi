@@ -168,7 +168,9 @@ export default function Home() {
 
       {/* Egg (bottom left) + bubble 2 (leaves room for the egg) */}
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: 20 }}>
-        <Image source={EGGS[eggLine.mood]} resizeMode="contain" style={{ width: 130, height: 160 }} />
+        <Pressable onPress={nextLine}>
+          <Image source={EGGS[eggLine.mood]} resizeMode="contain" style={{ width: 130, height: 160 }} />
+        </Pressable>
         <View style={{ flex: 1, marginLeft: 16 }}>
           <Pressable onPress={nextLine} style={{ backgroundColor: C.card, borderRadius: 24, padding: 18 }}>
             <Text style={{ fontSize: 17, lineHeight: 24, color: C.brown }}>{eggLine.text}</Text>

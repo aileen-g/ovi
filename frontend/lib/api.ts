@@ -25,7 +25,7 @@ export const api = {
 export const iso = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
-export const C = { bg: "#DFF3FF", card: "#FFFFFF", brown: "#5C3A36", pink: "#F4C6C6", yellow: "#F5E6A0", grey: "#8A8A8A" };
+export const C = { bg: "#EAF4F7", card: "#FFFFFF", brown: "#5C3A36", pink: "#F4C6C6", yellow: "#F5E6A0", grey: "#8A8A8A" };
 
 // Phase colours for the calendar highlight. Pastel + a little see-through. Change them here and the
 // calendar and legend both update. (Menstrual is the same pink as C.pink, the old period circles.)
