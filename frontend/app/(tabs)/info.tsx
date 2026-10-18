@@ -5,7 +5,6 @@ import { C } from "../../lib/api";
 const MUTED = "#7B6F73";
 const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "Georgia, serif" });
 
-// Placeholder cards. Swap these for real data later (title, value, unit, note).
 const CONDITIONS = [
   {
     title: "Polycystic Ovary Syndrome (PCOS)",

@@ -180,3 +180,6 @@ register(app, db, all_logs, history)
 
 from endo_routes import register as register_endo
 register_endo(app, all_logs, periods)
+
+from report_routes import register as register_report
+register_report(app, db, all_logs, periods, history)

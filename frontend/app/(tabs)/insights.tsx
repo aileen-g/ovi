@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable, TextInput, Platform } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, TextInput, Platform, Alert } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { api, BASE, C } from "../../lib/api";
+import { generateReport } from "../../lib/report";
 
 const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "Georgia, serif" });
 
@@ -45,6 +46,7 @@ export default function Insights() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<any>(emptyForm);
   const [error, setError] = useState("");
+  const [reporting, setReporting] = useState(false);
 
   const loadPcos = () =>
     fetch(`${BASE}/pcos`).then((r) => r.json()).then((p) => { setPcos(p); if (!p.ready) setShowForm(true); }).catch(() => {});
@@ -72,6 +74,19 @@ export default function Insights() {
     });
     setShowForm(false);
     loadPcos();
+  };
+
+  // "Generate Report" button: builds the PDF (lib/report.ts) and opens the share / save sheet
+  const makeReport = async () => {
+    if (reporting) return;
+    setReporting(true);
+    try {
+      await generateReport();
+    } catch (e) {
+      Alert.alert("Couldn't make the report", "Check that the app can reach the backend, then try again.");
+    } finally {
+      setReporting(false);
+    }
   };
 
   const card = { backgroundColor: C.card, borderRadius: 16, padding: 16, marginTop: 12 } as const;
@@ -203,6 +218,17 @@ export default function Insights() {
         ))}
         <Text style={{ color: C.grey, marginTop: 20, fontSize: 12 }}>{a.disclaimer}</Text>
       </>)}
+
+      {/* ---- Generate Report (same look as the Daily log's "Save check-in" button) ---- */}
+      <Pressable style={{ backgroundColor: C.brown, padding: 16, borderRadius: 14, marginTop: 24, alignItems: "center", opacity: reporting ? 0.7 : 1 }}
+        disabled={reporting} onPress={makeReport}>
+        {reporting
+          ? <ActivityIndicator color="white" />
+          : <Text style={{ color: "white", fontWeight: "600" }}>Generate Report</Text>}
+      </Pressable>
+      <Text style={{ color: C.grey, fontSize: 12, textAlign: "center", marginTop: 16, lineHeight: 18 }}>
+        A PDF of your raw logged data to save, print, or share with your clinician.
+      </Text>
     </ScrollView>
   );
 }
