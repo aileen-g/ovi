@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
-import { View, Text, Pressable, ScrollView, Image } from "react-native";
+import { View, Text, Pressable, Platform, ScrollView, Image } from "react-native";
 import { useFocusEffect, router } from "expo-router";
 import { api, iso, C, Log, PhaseData, PhaseName, PHASES, PHASE_ORDER } from "../../lib/api";
+
+const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "Georgia, serif" });
 
 // The egg has 4 moods. Put your 4 PNGs in frontend/assets/images/ with these names.
 type Mood = "happy" | "moody" | "normal" | "smirk";
@@ -78,7 +80,7 @@ export default function Home() {
 
   return (
   <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 20, paddingTop: 60 }}>
-        <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown }}>Welcome</Text>
+        <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown, fontFamily: SERIF }}>Welcome!</Text>
         <View style={{ backgroundColor: C.card, borderRadius: 16, padding: 16, marginTop: 16 }}>
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <View style={{ flexDirection: "row", alignItems: "center", flexShrink: 1, flexWrap: "wrap" }}>

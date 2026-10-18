@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Platform } from "react-native";
+import { View, Text, ScrollView, Platform, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { C } from "../../lib/api";
 
@@ -6,27 +6,44 @@ const MUTED = "#7B6F73";
 const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "Georgia, serif" });
 
 // Placeholder cards. Swap these for real data later (title, value, unit, note).
-const REPORTS = [
-  { title: "Blood Flow Report", value: "–", unit: "days", note: "6 completed cycles" },
-  { title: "Blood Flow Report", value: "–", unit: "days", note: "6 completed cycles" },
-  { title: "Blood Flow Report", value: "–", unit: "days", note: "6 completed cycles" },
-  { title: "Blood Flow Report", value: "–", unit: "days", note: "6 completed cycles" },
-  { title: "Blood Flow Report", value: "–", unit: "days", note: "6 completed cycles" },
-  { title: "Blood Flow Report", value: "–", unit: "days", note: "6 completed cycles" },
+const CONDITIONS = [
+  {
+    title: "Polycystic Ovary Syndrome (PCOS)",
+    body: "PCOS is a common hormonal condition that can cause irregular or missed periods, acne, excess hair growth, and hair thinning. It’s also linked to insulin resistance and fertility challenges. Despite the name, not everyone has cysts.",
+    image: require("../../assets/images/ovaries/uterus_endo.png"),
+  },
+  {
+    title: "Menopause",
+    body: "Menopause is when you’ve gone 12 months without a period. The years before it are called perimenopause, which bring irregular cycles, hot flashes, poor sleep, and mood changes.",
+    image: require("../../assets/images/ovaries/uterus_meno.png"),
+  },
+  {
+    title: "Endometriosis",
+    body: "Endometriosis is a condition where tissue like the uterine lining grows outside the uterus. It can cause severe period pain, pain during sex, heavy bleeding, and fatigue. It’s often undiagnosed for years.",
+    image: require("../../assets/images/ovaries/uterus_pcos.png"),
+  },
+
 ];
 
 export default function Info() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 20, paddingTop: 60, paddingBottom: 40 }}>
-      <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown, fontFamily: SERIF, marginTop: 8, marginBottom: 16 }}>
+      <Text style={{ fontSize: 30, fontWeight: "700", color: C.brown, fontFamily: SERIF, marginTop: 8, marginBottom: 16 }}>
         General Information
       </Text>
 
-      {REPORTS.map((r, i) => (
-        <View key={i} style={{ backgroundColor: C.card, borderRadius: 20, paddingVertical: 18, paddingHorizontal: 20, marginBottom: 8 }}>
-          <Text style={{ fontSize: 16, color: MUTED }}>{r.title}</Text>
-          <Text style={{ fontSize: 18, color: MUTED, marginTop: 8 }}>{r.value} {r.unit}</Text>
-          <Text style={{ fontSize: 13, color: MUTED, marginTop: 8 }}>{r.note}</Text>
+      {CONDITIONS.map((c, i) => (
+        <View key={i} style={{ backgroundColor: C.card, borderRadius: 20, paddingVertical: 20, paddingHorizontal: 20, marginBottom: 16 }}>
+          <Text style={{ fontSize: 20, fontWeight: "700", color: MUTED }}>{c.title}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+            <Text style={{ flex: 1, fontSize: 16, lineHeight: 24, color: MUTED }}>{c.body}</Text>
+            <Image
+              source={c.image}
+              resizeMode="contain"
+              accessibilityLabel={`${c.title} illustration`}
+              style={{ width: 120, height: 100, marginLeft: 12 }}
+            />
+          </View>
         </View>
       ))}
 

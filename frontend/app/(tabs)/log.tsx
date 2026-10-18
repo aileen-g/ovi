@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable, ScrollView, Alert, Image, useWindowDimensions } from "react-native";
+import { View, Text, Platform, TextInput, Pressable, ScrollView, Alert, Image, useWindowDimensions } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { api, iso, C } from "../../lib/api";
+
+const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "Georgia, serif" });
+
 
 const FLOW = ["none", "light", "medium", "heavy"];
 // Same mood names as before (so saved data and insights don't change), each with its egg picture.
@@ -13,7 +16,7 @@ const MOODS: { value: string; img: any }[] = [
   { value: "happy",     img: require("../../assets/images/eggs/egg_happy.png") },
   { value: "anxious",   img: require("../../assets/images/eggs/egg_anxious.png") },
 ];
-const SYMPTOMS = ["Mild cramps", "Tender breasts", "Headache", "Bloating"];
+const SYMPTOMS = ["Mild cramps", "Heavy cramps", "Headache", "Bloating"];
 
 const PAGE_PAD = 20;   // page side padding (see contentContainerStyle below)
 const BOX_PAD = 8;     // padding inside each rounded box
@@ -93,7 +96,7 @@ export default function DailyLog() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: PAGE_PAD, paddingTop: 60 }}>
-      <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown }}>Daily log</Text>
+      <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown, fontFamily: SERIF }}>Daily log</Text>
       <Text style={{ color: C.brown, marginTop: 6 }}>{day}</Text>
 
       <SectionLabel title="PERIOD FLOW" />

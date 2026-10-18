@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable, TextInput } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, TextInput, Platform } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { api, BASE, C } from "../../lib/api";
+
+const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "Georgia, serif" });
 
 const YESNO: [string, string][] = [
   ["weight_gain", "Recent weight gain"],
@@ -76,7 +78,7 @@ export default function Insights() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 20, paddingTop: 60, paddingBottom: 60 }}>
-      <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown }}>Insights</Text>
+      <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown, fontFamily: SERIF }}>Insights</Text>
 
       {/* ---- PCOS pattern check ---- */}
       <View style={{ ...card, borderLeftWidth: 5, borderLeftColor: pcos?.ready ? LEVEL_COLOR[pcos.level] : C.pink }}>

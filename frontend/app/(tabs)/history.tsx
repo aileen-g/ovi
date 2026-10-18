@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { api, C } from "../../lib/api";
 
 const DARK = "#A14F4F";   // colour of the most recent (last) bar
-const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "serif" });
+const SERIF = Platform.select({ ios: "Georgia", android: "serif", default: "Georgia, serif" });
 const SHOW = 6;           // how many bars to show
 
 // "27–29" (or just "28" if every value is the same)
@@ -75,7 +75,7 @@ export default function History() {
   useFocusEffect(useCallback(() => { api.history().then(setD).catch(() => {}); }, []));
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 20, paddingTop: 60 }}>
-      <Text style={{ fontSize: 34, fontWeight: "700", color: C.brown }}>Past cycles</Text>
+      <Text style={{ fontSize: 34, fontWeight: "700", fontFamily: SERIF, color: C.brown }}>Past cycles</Text>
       {d && (<>
         <View style={{ flexDirection: "row", gap: 12, marginTop: 16 }}>
           <Stat label="Average cycle" v={d.avg_cycle} />

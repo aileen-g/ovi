@@ -135,6 +135,7 @@ def insights():
     period_days = [d for r in runs for d in r]
     n_pd = len(period_days) or 1
     sym = lambda d, s: s in logs[d]["symptoms"]
+    cramp = lambda d: sym(d, "Mild cramps") or sym(d, "Heavy cramps")
     out = []
 
     def add(title, detail, level="info"): out.append({"title": title, "detail": detail, "level": level})
@@ -153,7 +154,7 @@ def insights():
         add("Long periods", f"Your periods average {ins['avg_period']} days, longer than the typical 3-7.", "watch")
 
     heavy = sum(logs[d]["flow"] == "heavy" for d in period_days) / n_pd
-    cramps = sum(sym(d, "Mild cramps") for d in period_days) / n_pd
+    cramps = sum(cramp(d) for d in period_days) / n_pd
     if heavy >= 0.4 and cramps >= 0.5 and len(period_days) >= 4:
         add("Heavy and painful periods",
             "Frequent heavy flow with cramps is a pattern clinicians tend to look at. "
